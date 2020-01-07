@@ -19,6 +19,9 @@ func Verifier(r *http.Request) (*views.AlexaRequest, error) {
 		return nil, errors.WithMessage(err, "whoops an error occurs with the verifier")
 	}
 	err = json.Unmarshal(a, &s)
+	if err != nil {
+		return nil, errors.WithMessage(err, "unable to unmarshal the request body")
+	}
 	if s.Context.System.Application.ApplicationID != os.Getenv("ALEXA_SKILLID") {
 		return nil, errors.New("applicationID mismatch")
 	}

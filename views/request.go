@@ -49,7 +49,7 @@ type SupportedInterfaces struct{}
 
 // Session ...
 type Session struct {
-	New         string       `json:"new,omitempty"`
+	New         bool         `json:"new,omitempty"`
 	SessionID   string       `json:"sessionId,omitempty"`
 	Application *Application `json:"application,omitempty"`
 	User        *User        `json:"user,omitempty"`
@@ -70,14 +70,9 @@ type Request struct {
 
 // Intent ...
 type Intent struct {
-	Name               string `json:"name,omitempty"`
-	ConfirmationStatus string `json:"confirmationStatus,omitempty"`
-	Slots              *Slots `json:"slots,omitempty"`
-}
-
-// Slots ...
-type Slots struct {
-	SlotName *SlotName `json:"SlotName,omitempty"`
+	Name               string                 `json:"name,omitempty"`
+	ConfirmationStatus string                 `json:"confirmationStatus,omitempty"`
+	Slots              map[string]interface{} `json:"slots,omitempty"`
 }
 
 // SlotName ...
@@ -120,4 +115,11 @@ type Value struct {
 type Error struct {
 	Type    string `json:"type,omitempty"`
 	Message string `json:"message,omitempty"`
+}
+
+// Slot ...
+type Slot struct {
+	ConfirmationStatus string       `json:"confirmationStatus,omitempty"`
+	Name               string       `json:"name,omitempty"`
+	Resolutions        *Resolutions `json:"resolutions,omitempty"`
 }

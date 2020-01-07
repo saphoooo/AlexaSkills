@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -29,24 +28,23 @@ func alexa(w http.ResponseWriter, r *http.Request) {
 		switch intent := s.Request.Intent.Name; intent {
 		case "GetCookingIntent":
 			params := controllers.NewGetCookingParams()
-			switch slot := s.Request.Intent.Slots.SlotName.Name; slot {
-			case "Foods":
-				params.FoodName = s.Request.Intent.Slots.SlotName.Value
-				resp, err := controllers.GetCookingInstructionIntent(params)
-				if err != nil {
-					panic(err)
-				}
-				fmt.Println(string(resp))
-			case "DietTypes":
-				params.DietTypes = s.Request.Intent.Slots.SlotName.Value
-				resp, err := controllers.GetCookingInstructionIntent(params)
-				if err != nil {
-					panic(err)
-				}
-				fmt.Println(string(resp))
-			default:
-				log.Fatalln("unknow slot:", slot)
+			err := controllers.SlotParser(s.Request.Intent.Slots, params)
+			if err != nil {
+				panic(err)
 			}
+			cooking, err := controllers.GetCookingInstructionIntent(params)
+			if err != nil {
+				panic(err)
+			}
+			text, err := controllers.ResultsToText(cooking)
+			if err != nil {
+				panic(err)
+			}
+			resp, err := controllers.NewPlainTextResponse(text)
+			if err != nil {
+				panic(err)
+			}
+			controllers.JSONReply(w, resp)
 		default:
 			log.Fatalln("unknow intent:", intent)
 		}

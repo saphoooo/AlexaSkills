@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -49,4 +50,18 @@ func NewGetCookingParams() *views.GetCookingParams {
 		FoodName:  "",
 		DietTypes: "",
 	}
+}
+
+// ResultsToText ...
+func ResultsToText(results []byte) (string, error) {
+	returnedString := "I found following dishes that you can cook"
+	var r views.SpoonacularResult
+	err := json.Unmarshal(results, &r)
+	if err != nil {
+		return "", errors.WithMessage(err, "unable un unmarshal spoonacular results")
+	}
+	for _, value := range r.Results {
+		returnedString = returnedString + ", " + value.Title
+	}
+	return returnedString, nil
 }
