@@ -13,11 +13,11 @@ func SlotParser(slot map[string]interface{}, params *views.GetCookingParams) err
 		var newSlot views.Slot
 		s, err := json.Marshal(slot[key])
 		if err != nil {
-			return errors.WithMessage(err, "error unmarshaling "+key)
+			return errors.WithMessage(err, "unable to marshal "+key)
 		}
 		err = json.Unmarshal(s, &newSlot)
 		if err != nil {
-			return errors.WithMessage(err, "error marshaling "+key)
+			return errors.WithMessage(err, "unable to unmarshal "+key)
 		}
 		if newSlot.Resolutions != nil {
 			switch key {

@@ -58,7 +58,7 @@ func ResultsToText(results []byte) (string, error) {
 	var r views.SpoonacularResult
 	err := json.Unmarshal(results, &r)
 	if err != nil {
-		return "", errors.WithMessage(err, "unable un unmarshal spoonacular results")
+		return "", errors.WithMessage(err, "unable to unmarshal spoonacular results")
 	}
 	for _, value := range r.Results {
 		returnedString = returnedString + ", " + value.Title
