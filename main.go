@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"time"
 
-	"cooking.io/controllers"
 	"github.com/gomodule/redigo/redis"
 	"github.com/gorilla/mux"
+	"github.com/saphoooo/AlexaSkills/controllers"
 )
 
 func alexa(w http.ResponseWriter, r *http.Request) {

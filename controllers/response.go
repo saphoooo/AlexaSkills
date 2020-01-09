@@ -3,7 +3,7 @@ package controllers
 import (
 	"encoding/json"
 
-	"cooking.io/views"
+	"github.com/saphoooo/AlexaSkills/views"
 )
 
 // NewPlainTextResponse is an helper for building a plaintext response

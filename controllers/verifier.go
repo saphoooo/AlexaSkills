@@ -8,7 +8,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"cooking.io/views"
+	"github.com/saphoooo/AlexaSkills/views"
 )
 
 // Verifier checks the request's accuracy

@@ -3,8 +3,8 @@ package controllers
 import (
 	"encoding/json"
 
-	"cooking.io/views"
 	"github.com/pkg/errors"
+	"github.com/saphoooo/AlexaSkills/views"
 )
 
 // SlotParser iterates over the slots included in the intend request
