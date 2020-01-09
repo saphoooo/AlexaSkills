@@ -9,10 +9,11 @@ import (
 
 	"cooking.io/views"
 
+	"github.com/gomodule/redigo/redis"
 	"github.com/pkg/errors"
 )
 
-// GetCookingInstructionIntent ...
+// GetCookingInstructionIntent intents to format the query to spoonacular.com API
 func GetCookingInstructionIntent(p *views.GetCookingParams) ([]byte, error) {
 	baseURL, err := url.Parse("https://api.spoonacular.com/recipes/complexSearch?")
 	if err != nil {
@@ -21,7 +22,7 @@ func GetCookingInstructionIntent(p *views.GetCookingParams) ([]byte, error) {
 	params := url.Values{}
 	params.Add("apiKey", os.Getenv("SPOONACULAR_APIKEY"))
 	params.Add("number", "3")
-	params.Add("offset", "0")
+	params.Add("offset", p.Offset)
 	params.Add("instructionsRequired", "true")
 	if p.FoodName != "" {
 		params.Add("query", p.FoodName)
@@ -40,8 +41,8 @@ func GetCookingInstructionIntent(p *views.GetCookingParams) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	js, err := ioutil.ReadAll(res.Body)
-	return js, nil
+	resp, err := ioutil.ReadAll(res.Body)
+	return resp, nil
 }
 
 // NewGetCookingParams ...
@@ -49,6 +50,7 @@ func NewGetCookingParams() *views.GetCookingParams {
 	return &views.GetCookingParams{
 		FoodName:  "",
 		DietTypes: "",
+		Offset:    "0",
 	}
 }
 
@@ -64,4 +66,43 @@ func ResultsToText(results []byte) (string, error) {
 		returnedString = returnedString + ", " + value.Title
 	}
 	return returnedString, nil
+}
+
+// KeepCookingParams ...
+func KeepCookingParams(pool *redis.Pool, key string, params *views.GetCookingParams) error {
+	conn := pool.Get()
+	defer conn.Close()
+
+	_, err := conn.Do("HMSET", key, "FoodName", params.FoodName, "DietTypes", params.DietTypes, "Offset", params.Offset)
+	if err != nil {
+		return errors.WithMessage(err, "inserting params in Redis...")
+	}
+	_, err = conn.Do("EXPIRE", key, 120)
+	if err != nil {
+		return errors.WithMessage(err, "seting key expire in Redis...")
+	}
+	return nil
+}
+
+// GetCookingParams ...
+func GetCookingParams(pool *redis.Pool, key string) (*views.GetCookingParams, error) {
+	conn := pool.Get()
+	defer conn.Close()
+
+	exists, err := redis.Int(conn.Do("EXISTS", key))
+	if err != nil {
+		return nil, err
+	} else if exists == 0 {
+		return nil, errors.New("ErrNoKey")
+	}
+
+	reply, err := redis.StringMap(conn.Do("HGETALL", key))
+	if err != nil {
+		return nil, err
+	}
+	return &views.GetCookingParams{
+		FoodName:  reply["FoodName"],
+		DietTypes: reply["DietTypes"],
+		Offset:    reply["Offset"],
+	}, nil
 }

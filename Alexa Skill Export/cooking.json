@@ -1,0 +1,171 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "zguingou's kitchen",
+            "intents": [
+                {
+                    "name": "AMAZON.FallbackIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": [
+                        "how do I use this",
+                        "help me",
+                        "I need help"
+                    ]
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "GetCookingIntent",
+                    "slots": [
+                        {
+                            "name": "DietTypes",
+                            "type": "DietTypes",
+                            "samples": [
+                                "I am {DietTypes}",
+                                "{DietTypes}",
+                                "Yes i am {DietTypes}"
+                            ]
+                        },
+                        {
+                            "name": "Foods",
+                            "type": "Foods",
+                            "samples": [
+                                "I want to cook {Foods}",
+                                "I want to make {Foods}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "I want to cook {Foods}",
+                        "I want to make {Foods}",
+                        "I want to make {DietTypes} {Foods}",
+                        "I want to cook {DietTypes} {Foods}"
+                    ]
+                },
+                {
+                    "name": "GetMoreRecipesIntent",
+                    "slots": [],
+                    "samples": [
+                        "get more recipes",
+                        "I want more recipes"
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "Foods",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "Burger"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Pizza"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Fish"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "DietTypes",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "Vegan"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Vegetarian"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Pescetarian"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "dialog": {
+            "intents": [
+                {
+                    "name": "GetCookingIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "DietTypes",
+                            "type": "DietTypes",
+                            "confirmationRequired": true,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "confirmation": "Confirm.Slot.1319446911674.75777912392",
+                                "elicitation": "Elicit.Slot.1319446911674.75777912392"
+                            }
+                        },
+                        {
+                            "name": "Foods",
+                            "type": "Foods",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.1319446911674.511432522199"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "delegationStrategy": "ALWAYS"
+        },
+        "prompts": [
+            {
+                "id": "Elicit.Slot.1319446911674.75777912392",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Do you have any dietary requirement like vegan, vegetarian or pescetarian?"
+                    }
+                ]
+            },
+            {
+                "id": "Confirm.Slot.1319446911674.75777912392",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "You said you are {DietTypes}"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.1319446911674.511432522199",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "What kind of food would you like to cook?"
+                    }
+                ]
+            }
+        ]
+    }
+}

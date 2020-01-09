@@ -4,6 +4,7 @@ package views
 type GetCookingParams struct {
 	FoodName  string
 	DietTypes string
+	Offset    string
 }
 
 // SpoonacularResult ...
