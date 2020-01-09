@@ -7,7 +7,8 @@ import (
 	"github.com/pkg/errors"
 )
 
-// SlotParser ...
+// SlotParser iterates over the slots included in the intend request
+// see https://developer.amazon.com/fr-FR/docs/alexa/custom-skills/request-types-reference.html#intentrequest
 func SlotParser(slot map[string]interface{}, params *views.GetCookingParams) error {
 	for key := range slot {
 		var newSlot views.Slot

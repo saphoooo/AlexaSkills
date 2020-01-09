@@ -6,7 +6,7 @@ import (
 	"cooking.io/views"
 )
 
-// NewPlainTextResponse ...
+// NewPlainTextResponse is an helper for building a plaintext response
 func NewPlainTextResponse(text string) ([]byte, error) {
 	r := &views.AlexaResponse{
 		Version: "1.0",

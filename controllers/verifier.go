@@ -12,6 +12,7 @@ import (
 )
 
 // Verifier checks the request's accuracy
+// see https://developer.amazon.com/fr-FR/docs/alexa/custom-skills/security-testing-for-an-alexa-skill.html#22-skills-hosted-as-web-services-on-your-own-endpoint
 func Verifier(r *http.Request) (*views.AlexaRequest, error) {
 	var s views.AlexaRequest
 	a, err := ioutil.ReadAll(r.Body)

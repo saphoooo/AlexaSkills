@@ -14,6 +14,7 @@ import (
 )
 
 // GetCookingInstructionIntent intents to format the query to spoonacular.com API
+// see https://spoonacular.com/food-api/docs#Search-Recipes-Complex
 func GetCookingInstructionIntent(p *views.GetCookingParams) ([]byte, error) {
 	baseURL, err := url.Parse("https://api.spoonacular.com/recipes/complexSearch?")
 	if err != nil {
@@ -45,7 +46,7 @@ func GetCookingInstructionIntent(p *views.GetCookingParams) ([]byte, error) {
 	return resp, nil
 }
 
-// NewGetCookingParams ...
+// NewGetCookingParams creates an empty params struct
 func NewGetCookingParams() *views.GetCookingParams {
 	return &views.GetCookingParams{
 		FoodName:  "",
@@ -54,7 +55,7 @@ func NewGetCookingParams() *views.GetCookingParams {
 	}
 }
 
-// ResultsToText ...
+// ResultsToText iterates over spoonacular results to create a string containing all
 func ResultsToText(results []byte) (string, error) {
 	returnedString := "I found following dishes that you can cook"
 	var r views.SpoonacularResult
@@ -68,23 +69,23 @@ func ResultsToText(results []byte) (string, error) {
 	return returnedString, nil
 }
 
-// KeepCookingParams ...
+// KeepCookingParams creates a record of current params (views.GetCookingParams) in Redis
 func KeepCookingParams(pool *redis.Pool, key string, params *views.GetCookingParams) error {
 	conn := pool.Get()
 	defer conn.Close()
 
 	_, err := conn.Do("HMSET", key, "FoodName", params.FoodName, "DietTypes", params.DietTypes, "Offset", params.Offset)
 	if err != nil {
-		return errors.WithMessage(err, "inserting params in Redis...")
+		return errors.WithMessage(err, "error while inserting params in Redis")
 	}
 	_, err = conn.Do("EXPIRE", key, 120)
 	if err != nil {
-		return errors.WithMessage(err, "seting key expire in Redis...")
+		return errors.WithMessage(err, "error while setting key expire in Redis")
 	}
 	return nil
 }
 
-// GetCookingParams ...
+// GetCookingParams retrieves recorded params (views.GetCookingParams) in Redis
 func GetCookingParams(pool *redis.Pool, key string) (*views.GetCookingParams, error) {
 	conn := pool.Get()
 	defer conn.Close()
