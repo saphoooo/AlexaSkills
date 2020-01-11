@@ -1,4 +1,4 @@
-package controllers
+package main
 
 import (
 	"encoding/json"
@@ -7,15 +7,14 @@ import (
 	"net/url"
 	"os"
 
-	"github.com/saphoooo/AlexaSkills/views"
+	"cooking.io/spoonacular"
 
 	"github.com/gomodule/redigo/redis"
 	"github.com/pkg/errors"
 )
 
-// GetCookingInstructionIntent intents to format the query to spoonacular.com API
 // see https://spoonacular.com/food-api/docs#Search-Recipes-Complex
-func GetCookingInstructionIntent(p *views.GetCookingParams) ([]byte, error) {
+func getCookingInstructionIntent(p *spoonacular.GetCookingParams) ([]byte, error) {
 	baseURL, err := url.Parse("https://api.spoonacular.com/recipes/complexSearch?")
 	if err != nil {
 		return nil, errors.WithMessage(err, "malformed URL")
@@ -46,19 +45,17 @@ func GetCookingInstructionIntent(p *views.GetCookingParams) ([]byte, error) {
 	return resp, nil
 }
 
-// NewGetCookingParams creates an empty params struct
-func NewGetCookingParams() *views.GetCookingParams {
-	return &views.GetCookingParams{
+func newGetCookingParams() *spoonacular.GetCookingParams {
+	return &spoonacular.GetCookingParams{
 		FoodName:  "",
 		DietTypes: "",
 		Offset:    "0",
 	}
 }
 
-// ResultsToText iterates over spoonacular results to create a string containing all
-func ResultsToText(results []byte) (string, error) {
+func resultsToText(results []byte) (string, error) {
 	returnedString := "I found following dishes that you can cook"
-	var r views.SpoonacularResult
+	var r spoonacular.Result
 	err := json.Unmarshal(results, &r)
 	if err != nil {
 		return "", errors.WithMessage(err, "unable to unmarshal spoonacular results")
@@ -69,8 +66,7 @@ func ResultsToText(results []byte) (string, error) {
 	return returnedString, nil
 }
 
-// KeepCookingParams creates a record of current params (views.GetCookingParams) in Redis
-func KeepCookingParams(pool *redis.Pool, key string, params *views.GetCookingParams) error {
+func keepCookingParams(pool *redis.Pool, key string, params *spoonacular.GetCookingParams) error {
 	conn := pool.Get()
 	defer conn.Close()
 
@@ -85,8 +81,7 @@ func KeepCookingParams(pool *redis.Pool, key string, params *views.GetCookingPar
 	return nil
 }
 
-// GetCookingParams retrieves recorded params (views.GetCookingParams) in Redis
-func GetCookingParams(pool *redis.Pool, key string) (*views.GetCookingParams, error) {
+func getCookingParams(pool *redis.Pool, key string) (*spoonacular.GetCookingParams, error) {
 	conn := pool.Get()
 	defer conn.Close()
 
@@ -101,7 +96,7 @@ func GetCookingParams(pool *redis.Pool, key string) (*views.GetCookingParams, er
 	if err != nil {
 		return nil, err
 	}
-	return &views.GetCookingParams{
+	return &spoonacular.GetCookingParams{
 		FoodName:  reply["FoodName"],
 		DietTypes: reply["DietTypes"],
 		Offset:    reply["Offset"],

@@ -1,4 +1,4 @@
-package views
+package spoonacular
 
 // GetCookingParams ...
 type GetCookingParams struct {
@@ -7,8 +7,8 @@ type GetCookingParams struct {
 	Offset    string
 }
 
-// SpoonacularResult ...
-type SpoonacularResult struct {
+// Result ...
+type Result struct {
 	Results      []*Results `json:"results"`
 	Offset       int        `json:"offset,omitempty"`
 	Number       int        `json:"number,omitempty"`
