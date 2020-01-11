@@ -7,4 +7,4 @@ You can import the Skill [cooking.json](https://github.com/saphoooo/AlexaSkills/
 I recently added Dialogflow too: you can import the agent [ZguingousKitchen.zip](https://github.com/saphoooo/AlexaSkills/blob/master/Dialogflow%20Export/ZguingousKitchen.zip) and run it with the same backend.
 
 ## Preview
-![Preview](https://user-images.githubusercontent.com/13923756/72101353-c7136e00-3324-11ea-9b38-d1c0ff4ab7fa.png)
+![Preview](https://user-images.githubusercontent.com/13923756/72211918-c5d47380-34d3-11ea-932c-f147d6039989.png)
