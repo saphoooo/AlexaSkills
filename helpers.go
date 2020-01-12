@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"cooking.io/spoonacular"
 	"github.com/gomodule/redigo/redis"
+	"github.com/saphoooo/AlexaSkills/spoonacular"
 )
 
 // jsonReply is a helper function to write a response with the appropriate header

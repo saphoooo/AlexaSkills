@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"os"
 
-	"cooking.io/spoonacular"
+	"github.com/saphoooo/AlexaSkills/spoonacular"
 
 	"github.com/gomodule/redigo/redis"
 	"github.com/pkg/errors"

@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"os"
 
-	"cooking.io/alexa"
-	"cooking.io/spoonacular"
 	"github.com/pkg/errors"
+	"github.com/saphoooo/AlexaSkills/alexa"
+	"github.com/saphoooo/AlexaSkills/spoonacular"
 )
 
 type alexaCookingResponse struct{}

@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 
-	"cooking.io/google"
+	"github.com/saphoooo/AlexaSkills/google"
 )
 
 // actionsNewTextToSpeechResponse marshals a text in Google ActionsResponse format

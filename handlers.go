@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	"cooking.io/google"
+	"github.com/saphoooo/AlexaSkills/google"
 
 	"github.com/gomodule/redigo/redis"
 )
