@@ -6,6 +6,7 @@ import (
 	"cooking.io/google"
 )
 
+// actionsNewTextToSpeechResponse marshals a text in Google ActionsResponse format
 func actionsNewTextToSpeechResponse(text string) ([]byte, error) {
 	item := &google.Items{
 		SimpleResponse: &google.SimpleResponse{
@@ -32,6 +33,7 @@ func actionsNewTextToSpeechResponse(text string) ([]byte, error) {
 
 type googleCookingResponse struct{}
 
+// sendCookingResponse returns the search results to Actions on Google API
 func (g googleCookingResponse) sendCookingResponse(cr *cookingResponse) error {
 	cooking, err := getCookingInstructionIntent(cr.Params)
 	if err != nil {

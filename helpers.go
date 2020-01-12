@@ -8,11 +8,13 @@ import (
 	"github.com/gomodule/redigo/redis"
 )
 
+// jsonReply is a helper function to write a response with the appropriate header
 func jsonReply(w http.ResponseWriter, reply []byte) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(reply)
 }
 
+// offsetInc increments the offset by the desired value
 func offsetInc(increment int, params *spoonacular.GetCookingParams) error {
 	offset, err := strconv.Atoi(params.Offset)
 	if err != nil {
