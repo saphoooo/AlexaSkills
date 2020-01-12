@@ -34,6 +34,7 @@ func (a alexaCookingResponse) sendCookingResponse(cr *cookingResponse) error {
 	return nil
 }
 
+// skillsNewPlainTextResponse marshals a text in Alexa SkillsResponse format
 func skillsNewPlainTextResponse(text string) ([]byte, error) {
 	r := &alexa.SkillsResponse{
 		Version: "1.0",
@@ -52,6 +53,7 @@ func skillsNewPlainTextResponse(text string) ([]byte, error) {
 	return m, nil
 }
 
+// skillsSlotParser iterates over Alexa response slots to capture their content
 // see https://developer.amazon.com/fr-FR/docs/alexa/custom-skills/request-types-reference.html#intentrequest
 func skillsSlotParser(slot map[string]interface{}, params *spoonacular.GetCookingParams) error {
 	for key := range slot {
@@ -78,6 +80,7 @@ func skillsSlotParser(slot map[string]interface{}, params *spoonacular.GetCookin
 	return nil
 }
 
+// skillsVerifier makes the necessary checks to ensure that the request comes from Alexa Skills
 // see https://developer.amazon.com/fr-FR/docs/alexa/custom-skills/security-testing-for-an-alexa-skill.html#22-skills-hosted-as-web-services-on-your-own-endpoint
 func skillsVerifier(r *http.Request) (*alexa.SkillsRequest, error) {
 	var s alexa.SkillsRequest

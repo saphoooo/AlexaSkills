@@ -13,6 +13,7 @@ import (
 	"github.com/pkg/errors"
 )
 
+// getCookingInstructionIntent makes a complex search on spoonacular API
 // see https://spoonacular.com/food-api/docs#Search-Recipes-Complex
 func getCookingInstructionIntent(p *spoonacular.GetCookingParams) ([]byte, error) {
 	baseURL, err := url.Parse("https://api.spoonacular.com/recipes/complexSearch?")
@@ -45,6 +46,7 @@ func getCookingInstructionIntent(p *spoonacular.GetCookingParams) ([]byte, error
 	return resp, nil
 }
 
+// newGetCookingParams is an helper function to initialize a GetCookingParams struct
 func newGetCookingParams() *spoonacular.GetCookingParams {
 	return &spoonacular.GetCookingParams{
 		FoodName:  "",
@@ -53,6 +55,7 @@ func newGetCookingParams() *spoonacular.GetCookingParams {
 	}
 }
 
+// resultsToText formats the results to create a single string
 func resultsToText(results []byte) (string, error) {
 	returnedString := "I found following dishes that you can cook"
 	var r spoonacular.Result
@@ -66,6 +69,7 @@ func resultsToText(results []byte) (string, error) {
 	return returnedString, nil
 }
 
+// keepCookingParams stores query parameters in redis for 120 seconds
 func keepCookingParams(pool *redis.Pool, key string, params *spoonacular.GetCookingParams) error {
 	conn := pool.Get()
 	defer conn.Close()
@@ -76,11 +80,12 @@ func keepCookingParams(pool *redis.Pool, key string, params *spoonacular.GetCook
 	}
 	_, err = conn.Do("EXPIRE", key, 120)
 	if err != nil {
-		return errors.WithMessage(err, "error while setting key expire in Redis")
+		return errors.WithMessage(err, "error while setting key expiry in Redis")
 	}
 	return nil
 }
 
+// getCookingParams retrieves query paramaters in redis
 func getCookingParams(pool *redis.Pool, key string) (*spoonacular.GetCookingParams, error) {
 	conn := pool.Get()
 	defer conn.Close()

@@ -30,12 +30,13 @@ type cookingResponse struct {
 	ResponseWriter http.ResponseWriter
 }
 
-type sender interface {
-	sendCookingResponse(c *cookingResponse) error
+type cookingSender interface {
+	sendCookingResponse(cr *cookingResponse) error
 }
 
-func sendCooking(s sender, cr *cookingResponse) error {
-	err := s.sendCookingResponse(cr)
+// sendCooking returns the search results to the desired API
+func sendCooking(cs cookingSender, cr *cookingResponse) error {
+	err := cs.sendCookingResponse(cr)
 	if err != nil {
 		return err
 	}
