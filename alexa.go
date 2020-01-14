@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -81,21 +82,30 @@ func skillsSlotParser(slot map[string]interface{}, params *spoonacular.GetCookin
 	return nil
 }
 
-// skillsVerifier makes the necessary checks to ensure that the request comes from Alexa Skills
+// NewSkillsVerifier makes the necessary checks to ensure that the request comes from Alexa Skills
 // see https://developer.amazon.com/fr-FR/docs/alexa/custom-skills/security-testing-for-an-alexa-skill.html#22-skills-hosted-as-web-services-on-your-own-endpoint
-func skillsVerifier(r *http.Request) (*alexa.SkillsRequest, error) {
-	var s alexa.SkillsRequest
-	a, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		return nil, errors.WithMessage(err, "whoops an error occurs with the verifier")
-	}
-	err = json.Unmarshal(a, &s)
-	if err != nil {
-		return nil, errors.WithMessage(err, "unable to unmarshal the request body")
-	}
-	if s.Context.System.Application.ApplicationID != os.Getenv("ALEXA_SKILLID") {
-		return nil, errors.New("applicationID mismatch")
-	}
-	return &s, nil
-
+func NewSkillsVerifier(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		buffer, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+			return
+		}
+		// robotClone duplicates the request to perform validation on is content
+		// instead of draining the original request body
+		robotClone := ioutil.NopCloser(bytes.NewBuffer(buffer))
+		original := ioutil.NopCloser(bytes.NewBuffer(buffer))
+		var v alexa.Verifier
+		err = json.NewDecoder(robotClone).Decode(&v)
+		if err != nil {
+			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			return
+		}
+		if v.Context.System.Application.ApplicationID != os.Getenv("ALEXA_SKILLID") {
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			return
+		}
+		r.Body = original
+		h.ServeHTTP(w, r)
+	})
 }

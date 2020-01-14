@@ -9,7 +9,7 @@ import (
 
 func main() {
 	r := mux.NewRouter()
-	r.HandleFunc("/alexa", alexaskills).Methods("POST")
+	r.Handle("/alexa", NewSkillsVerifier(http.HandlerFunc(alexaskills))).Methods("POST")
 	r.HandleFunc("/actions", actions).Methods("POST")
 	log.Println("Start listening on :8000...")
 	err := http.ListenAndServe(":8000", r)

@@ -8,6 +8,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/saphoooo/AlexaSkills/alexa"
 	"github.com/saphoooo/AlexaSkills/google"
 
 	"github.com/gomodule/redigo/redis"
@@ -15,14 +16,14 @@ import (
 
 // This route capture messages from Alexa Skills
 func alexaskills(w http.ResponseWriter, r *http.Request) {
-	s, err := skillsVerifier(r)
+	var s *alexa.SkillsRequest
+	err := json.NewDecoder(r.Body).Decode(&s)
 	if err != nil {
-		status := http.StatusUnauthorized
-		w.WriteHeader(status)
-		w.Write([]byte(http.StatusText(status)))
 		log.Println(err)
+		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
+	defer r.Body.Close()
 
 	pool := &redis.Pool{
 		MaxIdle:     10,

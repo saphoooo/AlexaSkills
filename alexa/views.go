@@ -3,6 +3,17 @@ package alexa
 // These view represents Alexa custom-skills request type references
 // https://developer.amazon.com/fr-FR/docs/alexa/custom-skills/request-types-reference.html#intentrequest
 
+// Verifier is a lightweight version of SkillsRequest only used to validate the request
+type Verifier struct {
+	Context struct {
+		System struct {
+			Application struct {
+				ApplicationID string `json:"applicationId"`
+			} `json:"application"`
+		} `json:"System"`
+	} `json:"context"`
+}
+
 // SkillsRequest request from Alexa Skills
 type SkillsRequest struct {
 	Version string   `json:"version,omitempty"`
