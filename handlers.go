@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/saphoooo/AlexaSkills/alexa"
@@ -110,12 +109,13 @@ func alexaskills(w http.ResponseWriter, r *http.Request) {
 
 // This route capture messages from Actions on Google
 func actions(w http.ResponseWriter, r *http.Request) {
-	if r.Header.Get("superSecret") != os.Getenv("ZGUINGOUS_KITCHEN") {
-		w.WriteHeader(http.StatusUnauthorized)
-		w.Write([]byte(http.StatusText(http.StatusUnauthorized)))
-		return
-	}
-
+	/*
+		if r.Header.Get("superSecret") != os.Getenv("ZGUINGOUS_KITCHEN") {
+			w.WriteHeader(http.StatusUnauthorized)
+			w.Write([]byte(http.StatusText(http.StatusUnauthorized)))
+			return
+		}
+	*/
 	pool := &redis.Pool{
 		MaxIdle:     10,
 		IdleTimeout: 240 * time.Second,

@@ -2,6 +2,8 @@ package main
 
 import (
 	"encoding/json"
+	"net/http"
+	"os"
 
 	"github.com/saphoooo/AlexaSkills/google"
 )
@@ -53,4 +55,16 @@ func (g googleCookingResponse) sendCookingResponse(cr *cookingResponse) error {
 	}
 	jsonReply(cr.ResponseWriter, resp)
 	return nil
+}
+
+// NewActionsVerifier ...
+func NewActionsVerifier(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		secret := r.Header.Get("superSecret")
+		if secret != os.Getenv("ZGUINGOUS_KITCHEN") {
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			return
+		}
+		h.ServeHTTP(w, r)
+	})
 }
