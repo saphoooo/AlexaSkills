@@ -16,11 +16,7 @@ type alexaCookingResponse struct{}
 
 // sendCookingResponse returns the search results to Alexa Skills API
 func (a alexaCookingResponse) sendCookingResponse(cr *cookingResponse) error {
-	cooking, err := getCookingInstructionIntent(cr.Params)
-	if err != nil {
-		return err
-	}
-	text, err := resultsToText(cooking)
+	text, err := resultsToText(getCookingInstructionIntent(cr.Params))
 	if err != nil {
 		return err
 	}

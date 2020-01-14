@@ -56,10 +56,13 @@ func newGetCookingParams() *spoonacular.GetCookingParams {
 }
 
 // resultsToText formats the results to create a single string
-func resultsToText(results []byte) (string, error) {
+func resultsToText(results []byte, err error) (string, error) {
+	if err != nil {
+		return "", err
+	}
 	returnedString := "I found following dishes that you can cook"
 	var r spoonacular.Result
-	err := json.Unmarshal(results, &r)
+	err = json.Unmarshal(results, &r)
 	if err != nil {
 		return "", errors.WithMessage(err, "unable to unmarshal spoonacular results")
 	}

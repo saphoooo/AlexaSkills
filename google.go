@@ -37,11 +37,7 @@ type googleCookingResponse struct{}
 
 // sendCookingResponse returns the search results to Actions on Google API
 func (g googleCookingResponse) sendCookingResponse(cr *cookingResponse) error {
-	cooking, err := getCookingInstructionIntent(cr.Params)
-	if err != nil {
-		return err
-	}
-	text, err := resultsToText(cooking)
+	text, err := resultsToText(getCookingInstructionIntent(cr.Params))
 	if err != nil {
 		return err
 	}
